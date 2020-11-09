@@ -867,7 +867,9 @@ public class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
         if (size > 0) {
             // be like clone(), allocate array based upon size not capacity
             int capacity = calculateCapacity(elementData, size);
-            SharedSecrets.getJavaOISAccess().checkArray(s, Object[].class, capacity);
+
+            // TODO 防止报错
+//            SharedSecrets.getJavaOISAccess().checkArray(s, Object[].class, capacity);
             ensureCapacityInternal(size);
 
             Object[] a = elementData;
@@ -1144,7 +1146,7 @@ public class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
             rangeCheckForAdd(index);
             checkForComodification();
             parent.add(parentOffset + index, e);
-            this.modCount = parent.modCount;
+//            this.modCount = parent.modCount; // TODO 防止报错
             this.size++;
         }
 
@@ -1152,17 +1154,18 @@ public class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
             rangeCheck(index);
             checkForComodification();
             E result = parent.remove(parentOffset + index);
-            this.modCount = parent.modCount;
+//            this.modCount = parent.modCount;// TODO 防止报错
             this.size--;
             return result;
         }
 
         protected void removeRange(int fromIndex, int toIndex) {
-            checkForComodification();
-            parent.removeRange(parentOffset + fromIndex,
-                    parentOffset + toIndex);
-            this.modCount = parent.modCount;
-            this.size -= toIndex - fromIndex;
+            // TODO 防止报错
+//            checkForComodification();
+//            parent.removeRange(parentOffset + fromIndex,
+//                    parentOffset + toIndex);
+//            this.modCount = parent.modCount;
+//            this.size -= toIndex - fromIndex;
         }
 
         public boolean addAll(Collection<? extends E> c) {
@@ -1178,7 +1181,7 @@ public class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAcce
 
             checkForComodification();
             parent.addAll(parentOffset + index, c);
-            this.modCount = parent.modCount;
+//            this.modCount = parent.modCount;// TODO 防止报错
             this.size += cSize;
             return true;
         }
