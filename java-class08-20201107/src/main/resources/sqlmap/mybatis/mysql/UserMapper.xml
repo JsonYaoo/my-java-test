@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (C) 2017 Baidu, Inc. All Rights Reserved.
+  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mapper.UserMapper">
+
+
+    <cache/>
+
+    <!--
+    <cache eviction="LRU" flushInterval="1000" size="1000" readOnly="true"/> -->
+
+    <resultMap id="userContactResultMap" type="vo.User">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <collection column="id" property="userContacts" select="mapper.UserContactMapper.getUserContactByUserId"/>
+    </resultMap>
+
+    <resultMap id="userContactResultMap1" type="vo.User">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <collection property="userContacts" column="id" ofType="vo.UserContact">
+            <result column="id" property="id"/>
+            <result column="user_id" property="userId"/>
+            <result column="contact_type" property="contactType"/>
+            <result column="contact_value" property="contactValue"/>
+            <result column="create_time" property="createTime"/>
+            <result column="update_time" property="updateTime"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="userResultMap" type="vo.User">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+    </resultMap>
+
+
+    <!--
+        id：这条SQL的唯一表示
+        parameterType：定义参数类型
+        resultType：定义返回值类型
+    -->
+    <select id="getUserById" parameterType="long" resultType="user">
+        select id, name, age from tb_user where id = #{id}
+    </select>
+
+    <select id="getUserByUser" parameterType="vo.User" resultMap="userResultMap">
+        select id, name, age
+        from tb_user
+        where 1=1
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            and name = #{name}
+        </if>
+        <if test="age != null">
+            and age = #{age}
+        </if>
+    </select>
+
+    <select id="getUserByUser2" parameterType="vo.User" resultMap="userResultMap">
+        select id, name, age
+        from tb_user
+        where 1=1
+        <choose>
+            <when test="id != null">
+                and id = #{id}
+            </when>
+            <when test="name != null and name != ''">
+                and name = #{name}
+            </when>
+            <otherwise>
+                and age is not null
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getUserByUser3" parameterType="vo.User" resultMap="userResultMap">
+        select
+        id, name, age from tb_user
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="getUserByUser4" parameterType="vo.User" resultMap="userResultMap">
+        select
+        id, name, age from tb_user
+        <trim prefix="where" prefixOverrides="and">
+            and id = #{id}
+        </trim>
+    </select>
+
+    <select id="getUserAndContactById" parameterType="long" resultMap="userContactResultMap">
+        select id, name, age from tb_user where id = #{id}
+    </select>
+
+    <select id="getUserByIds" resultMap="userResultMap">
+        select
+            id, name, age
+        from tb_user
+        where id in
+        <foreach collection="idList" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="getUserByName" parameterType="string" resultMap="userResultMap">
+        <bind name="namePattern" value="'%' + name + '%'"/>
+        select
+            id, name, age
+        from
+            tb_user
+        where
+            name like #{namePattern}
+        <!-- name like concat('%', #{name}, '%') -->
+    </select>
+
+
+    <insert id="insert" parameterType="user">
+        insert into tb_user(name, age) values (#{name}, #{age})
+    </insert>
+
+    <delete id="delById" parameterType="long">
+        delete from tb_user where id = #{id}
+    </delete>
+
+    <update id="updateUserByUser" parameterType="vo.User">
+        update tb_user
+        <!--
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+        </trim>
+        -->
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <select id="getAllMessage" resultMap="userContactResultMap1">
+        select tu.id, tu.name, tu.age, tuc.id, tuc.user_id, tuc.contact_type, tuc.contact_value, tuc.create_time,
+        tuc.update_time
+        from tb_user tu
+        left join tb_user_contact tuc on tu.id = tuc.user_id
+    </select>
+</mapper>

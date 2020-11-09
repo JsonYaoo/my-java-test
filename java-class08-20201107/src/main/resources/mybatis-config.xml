@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2017 Baidu, Inc. All Rights Reserved.
+  -->
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!-- 属性 -->
+    <properties resource="sqlmap/mybatis/mysql/jdbc.properties"/>
+
+
+    <settings>
+        <!-- 打印查询语句 -->
+        <setting name="autoMappingBehavior" value="PARTIAL"/>
+
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <!-- 配置驼峰转下划线 数据库中的下划线，转换Java Bean中的驼峰-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!-- 类型别名 -->
+    <typeAliases>
+        <package name="vo"/>
+        <!--
+        <typeAlias type="vo.User" alias="user"/> -->
+    </typeAliases>
+
+    <!-- 类型处理器
+    <typeHandlers/> -->
+
+    <!-- 对象工厂
+    <objectFactory type="" />   -->
+
+    <!-- 对象包装工厂
+    <objectWrapperFactory type="" />    -->
+
+    <!-- 对象工厂
+    <reflectorFactory type="" />    -->
+
+    <!-- 插件
+    <plugins>
+        <plugin interceptor=""></plugin>
+    </plugins> -->
+
+    <!-- 配置数据库环境 -->
+    <environments default="dev">
+        <environment id="dev">
+            <transactionManager type="JDBC"/> <!-- 事务管理器 -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!-- 数据库厂商标识 -->
+    <databaseIdProvider type="DB_VENDOR"/>
+
+    <!-- 映射器 -->
+    <mappers>
+        <mapper resource="sqlmap/mybatis/mysql/UserMapper.xml"/>
+        <mapper resource="sqlmap/mybatis/mysql/UserContactMapper.xml"/>
+        <mapper resource="sqlmap/mybatis/mysql/MessageMapper.xml"/>
+        <mapper resource="sqlmap/mybatis/mysql/MessageDetailMapper.xml"/>
+    </mappers>
+
+</configuration>

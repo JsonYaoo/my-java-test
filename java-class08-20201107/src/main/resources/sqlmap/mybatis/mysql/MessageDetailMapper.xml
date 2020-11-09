@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (C) 2017 Baidu, Inc. All Rights Reserved.
+  -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="mapper.MessageDetailMapper">
+
+
+    <resultMap id="msgDetailResult" type="vo.MessageDetail">
+        <id column="id" property="id"/>
+        <result column="msg_id" property="msgId"/>
+        <result column="detail_content" property="detailContent"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="allColumns">
+        id, msg_id, detail_content, create_time, update_time
+    </sql>
+
+
+    <select id="getMessageByMsgId" resultMap="msgDetailResult">
+        select
+            <include refid="allColumns"/>
+        from tb_message_detail where msg_id = #{msgId}
+    </select>
+
+    <select id="getMessageByMsgIdAndCreateTime" resultMap="msgDetailResult">
+        select
+            <include refid="allColumns"/>
+        from tb_message_detail where msg_id = #{msgId} and detail_content <![CDATA[!= ]]> #{content}
+    </select>
+    
+</mapper>
