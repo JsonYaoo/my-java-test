@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>day01-strategy-edu</module>
+        <module>java-class01-20201017</module>
     </modules>
 
     <dependencies>
