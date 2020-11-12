@@ -16,6 +16,8 @@
         <module>java-class05-20201025</module>
         <module>java-class05-20201025-demo</module>
         <module>java-class08-20201107</module>
+        <module>java-class-08-20201108</module>
+        <module>java-class-09-20201108</module>
     </modules>
 
     <parent>
